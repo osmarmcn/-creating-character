@@ -120,3 +120,6 @@
 // app.listen(8081, () =>{
 //     console.log('funcionando')
 // })
+
+// pake
+//  "start": "nodemon index.js"
