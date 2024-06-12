@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/styles.css">
+  <title>Personalização de Personagem</title>
+</head>
+<body>
+  <h1>Personalize seu Personagem</h1>
+  <form id="character-form">
+    <label for="strength">Força:</label>
+    <input type="range" id="strength" name="strength" min="1" max="10"><br>
+
+    <label for="intelligence">Inteligência:</label>
+    <input type="range" id="intelligence" name="intelligence" min="1" max="10"><br>
+
+    <label for="skinColor">Cor de Pele:</label>
+    <input type="color" id="skinColor" name="skinColor"><br>
+
+    <label for="hairColor">Cor do Cabelo:</label>
+    <input type="color" id="hairColor" name="hairColor"><br>
+
+    <button type="submit">Salvar</button>
+  </form>
+  <script src="/js/script.js"></script>
+</body>
+</html>
+
+
+body {
+  font-family: Arial, sans-serif;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-top: 10px;
+}
+
+button {
+  margin-top: 20px;
+}
+
+
+document.getElementById('character-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const formData = {
+    strength: document.getElementById('strength').value,
+    intelligence: document.getElementById('intelligence').value,
+    skinColor: document.getElementById('skinColor').value,
+    hairColor: document.getElementById('hairColor').value,
+  };
+
+  try {
+    const response = await fetch('/api/characters', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (response.ok) {
+      alert('Personagem salvo com sucesso!');
+    } else {
+      alert('Falha ao salvar o personagem.');
+    }
+  } catch (error) {
+    console.error('Erro:', error);
+  }
+});
+
+server
+const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+
+const app = express();
+const PORT = 3000;
+
+// Conectar ao MongoDB
+mongoose.connect('mongodb://localhost:27017/characterDB', { useNewUrlParser: true, useUnifiedTopology: true });
+
+// Middleware
+app.use(bodyParser.json());
+app.use(express.static('public'));
+
+// Modelo de Usuário
+const User = require('./models/user');
+
+// Rota para salvar a personalização
+app.post('/api/characters', async (req, res) => {
+  try {
+    const { strength, intelligence, skinColor, hairColor } = req.body;
+    const user = new User({
+      strength,
+      intelligence,
+      skinColor,
+      hairColor,
+    });
+    await user.save();
+    res.status(200).send('Personagem salvo com sucesso!');
+  } catch (error) {
+    res.status(500).send('Erro ao salvar o personagem.');
+  }
+});
+
+// Iniciar o servidor
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
+});
+
+
+user.js
+const mongoose = require('mongoose');
+
+const userSchema = new mongoose.Schema({
+  strength: { type: Number, min: 1, max: 10 },
+  intelligence: { type: Number, min: 1, max: 10 },
+  skinColor: { type: String },
+  hairColor: { type: String },
+});
+
+module.exports = mongoose.model('User', userSchema);
+
+
+depedencias
+npm init -y
+npm install express mongoose body-parser
+
+
+Executar a Aplicação
+node server/server.js
